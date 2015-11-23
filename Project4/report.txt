@@ -1,0 +1,96 @@
+CS31
+=====
+### Project 4 Report
+
+##### Obstacles
+1. Not checking all the error cases.
+
+2. Getting a more efficient way to do split rather than just doing a blind sort.
+
+3. Handling elements the same as the splitter for split().
+
+4. Handling duplicates of the splitter for split.
+
+5. Coming up with complete test cases.
+
+##### Tests
+```cpp
+//basic error cases are expected to be properly handled
+
+string s[6] = { "ben", "donald", "ted", "marco", "hillary", "ted"};
+string g[8] = { "ben", "donald", "ted", "marco", "hillary", "ted","ted","ted"};
+string n[6] = { "ben", "ben", "ben", "ben"};
+string d[9] = {
+    "ben", "chris", "marco", "marco", "donald", "donald", "donald", "marco", "marco"
+};
+string folks[6] = { "chris", "marco", "", "ben", "donald", "john" };
+string group[5] = { "chris", "marco", "john", "", "carly" };
+string names[10] = { "ted", "hillary", "rand", "bernie", "mike", "jeb" };
+string names1[10] = { "hillary", "rand", "bernie" };
+string names2[10] = { "ted", "bernie" };
+string names3[10] = { "bernie", "mike", "jeb" };
+string set1[10] = { "carly", "mike", "bernie", "hillary" };
+string set2[10] = { "ben", "donald" };
+string cand[6] = { "bernie", "hillary", "donald", "marco", "carly", "ben" };
+string cand2[4] = { "donald", "hillary", "jeb", "ben" };
+string cand3[4] = { "yyy", "zzz", "donald", "ben" };
+string cand4[6] = { "yyy", "zzz", "donald", "ben", "donald", "donald" };
+
+
+assert(lookup(s,5,"ben") == 0); //normal
+assert(lookup(s,5,"clinton") == -1); //not found
+assert(lookup(s,5,"marco") == 3); //normal
+assert(lookup(s,5,"BEN") == -1); //case
+assert(lookup(s,-3,"marco") == -1); //bad input
+
+assert(positionOfMax(s, 5) == 2); //ted
+assert(positionOfMax(s, 2) == 1); //another check
+assert(positionOfMax(s, 6) == 2); //duplicates? return first
+assert(positionOfMax(n, 4) == 0); //another duplicates check
+
+assert(countRuns(n, 4) == 1); //how many uniques
+assert(countRuns(g, 8) == 6); //another check
+assert(countRuns(d, 9) == 5); //multiple alternating sequences
+
+assert(differ(s, 6, g, 8) == 6); //same except for extra teds, and s ran out
+assert(differ(s, 6, n, 4) == 1); //only 1 different
+assert(differ(s, 4, s, 4) == 4); //same string!
+//given test cases
+assert(differ(folks, 6, group, 5) == 2);
+assert(differ(folks, 2, group, 1) == 1);
+
+assert(subsequence(g, 8, s, 6) == 0); //pretty much the same sequence, except for extra teds
+assert(subsequence(names, 5, names2, 2)==-1); //does not exist
+//given
+assert(subsequence(names, 6, names1, 3)==1);
+assert(subsequence(names, 6, names3, 3)==3);
+assert(subsequence(names, 6, names, 6)==0); //same string
+assert(subsequence(names, 6, names2, 0)==0); //empty array matching
+
+assert(lookupAny(names, 10, names1, 3) == 1); //some matches
+assert(lookupAny(s, 6, names2, 2) == 2);
+assert(lookupAny(group, 5, names1, 3) == -1); //no matches
+//given
+assert(lookupAny(names, 6, set1, 4) == 1);
+assert(lookupAny(names, 6, set2, 2) == -1);
+
+//these mutate s
+assert(appendToAll(s, 5, "!!!!!") == 5 && s[0] == "ben!!!!!");
+assert(appendToAll(s, 1, "!!!!!") == 1 && s[1] == "donald!!!!!" && s[0] == "ben!!!!!!!!!!"); //does not go over bounds
+assert(appendToAll(s, -1, "!!!!!") == -1); //invalid input
+
+assert(flip(d, 3) == 3 && d[2] == "ben" && d[0] == "marco" && d[1] == "chris"); //swap did happen
+assert(flip(d, 4) == 4 && d[0] == "marco" && d[1] == "ben" && d[2] == "chris");
+
+assert(rotateLeft(g, 6, 0) == 0 && g[5] == "ben" && g[0] == "donald"); //rotates
+assert(rotateLeft(g, 6, 2) == 2 && g[5] == "marco" && g[0] == "donald"); //first element should be untouched
+
+//actual results examined from cerr
+assert(split(cand, 6, "chris") == 3);
+assert(split(cand2, 4, "donald") == 1);
+assert(split(cand2, 4, "a") == 0); //all will be moved, with 0 as output
+assert(split(cand2, 4, "zzzzzzzzzzz") == 4); //none will be moved
+assert(split(cand3, 4, "donald") == 1); //same string as splitter
+assert(split(cand4, 6, "donald") == 1); //duplicate splitter strings inside the array
+
+```

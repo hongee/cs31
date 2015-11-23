@@ -1,0 +1,163 @@
+CS31
+=====
+### Project 6
+
+##### 1
+a.
+```cpp
+int main()
+{
+    int arr[3] = { 5, 10, 15 };
+    int* ptr = arr;
+
+    *ptr = 30;          // set arr[0] to 30
+    *(ptr + 1) = 20;    // set arr[1] to 20 -
+                        // attempting to add one to unwrapped pointer and assigning that is wrong
+    ptr += 2;
+    ptr[0] = 10;        // set arr[2] to 10
+
+    ptr = arr; //reassigns value of ptr
+
+    while (ptr <= arr + 2) //was printing from last to end
+    {
+        cout << *ptr << endl;    // print values
+        ptr++; //print, then increment
+    }
+}
+```
+
+b. The pointer was originally passed by value, and hence in the scope of main, the pointer was not initialized, and hence producing undefined behavior.
+
+`
+void findMax(int arr[], int n, int* &pToMax) {...}
+`
+
+c. The pointer `ptr` is not initialized, and assigning a value to its pointee will result in undefined unbehavior.
+
+```cpp
+int main()
+{
+    int pointee;
+    int* ptr;
+    ptr = &pointee;
+    computeCube(5, ptr);
+    cout << "Five cubed is " << *ptr << endl;
+}
+```
+
+d. `str1` and `str2` are pointers, and in this situation we want to compare the values they store instead of their addresses.
+
+```cpp
+// return true if two C strings are equal
+bool strequal(const char str1[], const char str2[])
+{
+  while (*str1 != 0  &&  *str2 != 0)
+  {
+      if (*str1 != *str2)  // compare corresponding characters
+          return false;
+      str1++;            // advance to the next character
+      str2++;
+  }
+  return *str1 == *str2;   // both ended at same time?
+}
+```
+
+e. The function `getPointerToArray` returns the pointer of the array created within the function, but there's no guarantee the function `f` will not overwrite/replace the
+values of that original array when it creates and fills values of the new array it created.
+
+##### 2
+a. `double* cat;`
+
+b. `double mouse[5];`
+
+c. `cat = mouse + 4;`
+
+d. `*cat = 42;`
+
+e. `*(mouse + 3) = 25;`
+
+f. `cat -= 3;`
+
+g. `cat[1] = 17;`
+
+h. `cat[0] = 54;`
+
+i. `bool b = (*cat == *(cat+1));`
+
+j. `bool d = (cat == mouse);`
+
+##### 3
+a.
+```cpp
+double mean(const double* scores, int numScores)
+{
+    const double* ptr = scores;
+    double tot = 0;
+    int count = 0;
+    while (count < numScores)
+    {
+        tot += *(ptr + count);
+        count++;
+    }
+    return tot/numScores;
+}
+```
+
+b.
+```cpp
+const char* findTheChar(char* str, char chr)
+{
+    for (int k = 0; *(str + k) != 0; k++)
+        if (*(str + k) == chr)
+            return str + k;
+
+    return nullptr;
+}
+```
+
+c.
+```cpp
+const char* findTheChar(char* str, char chr)
+{
+    while(*str != '\0') {
+      if(*str == chr)
+        return str;
+
+      str++;
+    }
+     return nullptr;
+}
+```
+
+##### 4
+```
+1 | 3
+ptr was set initially to the beginning of the array by maxwell as array[0] > array[2]
+it was then shifted by 2 to point to index 2 of the the array
+the first output is hence (array + 5) - (array + 2) = 3
+
+swap1 doesn't have any effect as it swapped the copied values of 2 int pointers passed by value.
+swap2 swapped array[0] and array[2] by dereferencing the addresses passed to them,
+and exchanging the values stored at them
+2 | 4 //originally at index 2
+3 | 79 //set using *(array+1) = 79, i.e. index 2 of array was set to 79
+4 | -1 //originally at index 0, set by *ptr = -1 after maxwell was called
+5 | 9  //set by ptr[1] = 9 after ptr was shifted to index 3
+6 | 22 //original array
+7 | 19 //original array
+```
+
+##### 5
+```cpp
+void removeS(char* str) {
+  while(*str != '\0') {
+    if(*str == 'S' || *str == 's') {
+      for(char* pos = str; *pos != '\0' ; pos++) {
+        *pos = *(pos + 1);
+      }
+    } else {
+      str++;
+    }
+  }
+}
+```

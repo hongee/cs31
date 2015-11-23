@@ -1,0 +1,149 @@
+CS31
+=====
+### Project 3 Report
+
+##### Obstacles
+1. Off by one errors when checking the bounds. (the first position was
+erroneously counted as a step)
+
+2. Confusing the coordinate system (a consequence of not printing the grid),
+where a larger row number was thought to be more north.
+
+3. Coming up with comprehensive test cases.
+
+4. Not initializing nsteps to a 0 value, resulting in undefined behavior.
+
+##### Design
+
+1. `isRouteWellFormed`
+```
+  foreach char in string:
+    if char is a valid input direction character:
+      set digit count to 0
+      continue
+    elsif char is a digit character and char is not first letter:
+      increment digit count by 1
+      if digit count is 3
+        return error
+      else
+        continue
+    else
+      invalid character found
+      return error
+
+  no errors found
+  return true
+```
+
+2. `navigateSegment`
+```
+  if inputs not valid //are coordinates within bounds and not a wall?
+    return -1         //is direction valid? is steps a positive number?
+
+  set steps to 0
+
+  foreach position in given direction:
+    if position is wall
+      break
+    else
+      increment steps
+      continue
+
+  if steps > maxSteps
+    return maxSteps
+  else
+    return steps
+```
+
+3. `navigateRoute`
+```
+  if inputs not valid //start & end coords valid? isRouteWellFormed?
+    return 2
+
+  set nsteps to 0
+
+  foreach character in route
+    if character is letter:
+      set direction to character
+      if next character is number and is not out of bounds
+        if next next character is number and is not out of bounds
+          set steps to two digit number
+        else
+          set steps to single digit number
+      else
+        set steps to 1 //no number given, default 1
+
+      set navigableSteps to navigateSegment value
+
+      if navigableSteps < steps //the move was invalid
+        nsteps += navigableSteps
+        return 3
+      else
+        change coords in given direction by steps
+        continue
+    else //character was a number, not processing
+      continue
+
+  //finished navigating the route without errors
+  if current coords = end coords
+    return 0
+  else
+    return 1
+```
+
+##### Test Cases
+```
+setSize(3,4);
+setWall(1,4);
+setWall(2,2);
+setWall(3,2);
+
+draw(3,3,1,1);
+
+assert(isRouteWellFormed("string route") == false);
+assert(isRouteWellFormed("N2eE01n0e2e1") == true);
+assert(isRouteWellFormed("W42") == true);
+assert(isRouteWellFormed("3sn") == false);
+assert(isRouteWellFormed("e1x") == false);
+assert(isRouteWellFormed("N144") == false);
+assert(isRouteWellFormed("w2+n3") == false);
+assert(isRouteWellFormed("11123123123e") == false);
+assert(isRouteWellFormed("ewewewewewewewe") == true);
+
+//all err cases
+assert(navigateSegment(1, -1, 'e', 5) == -1);
+assert(navigateSegment(-1, 1, 'e', 5) == -1);
+assert(navigateSegment(1, -1, 'o', 5) == -1);
+assert(navigateSegment(2, 2, 'e', 5) == -1);
+assert(navigateSegment(7, 1, 's', 5) == -1);
+assert(navigateSegment(1, 7, 's', 5) == -1);
+assert(navigateSegment(1, 7, 's', -5) == -1);
+
+assert(navigateSegment(1, 1, 'e', 5) == 2);
+assert(navigateSegment(1, 1, 's', 5) == 2);
+assert(navigateSegment(1, 1, 'e', 1) == 1);
+assert(navigateSegment(1, 1, 'e', 2) == 2);
+assert(navigateSegment(1, 1, 'N', 3) == 0);
+assert(navigateSegment(2, 1, 'e', 3) == 0);
+assert(navigateSegment(2, 4, 'w', 3) == 1);
+assert(navigateSegment(3, 3, 's', 3) == 0);
+assert(navigateSegment(1, 2, 'N', 2) == 0);
+assert(navigateSegment(3, 1, 'e', 5) == 0);
+assert(navigateSegment(2, 3, 'w', 5) == 0);
+assert(navigateSegment(1, 2, 's', 5) == 0);
+assert(navigateSegment(1, 3, 's', 5) == 2);
+assert(navigateSegment(1, 3, 's', 0) == 0);
+
+assert(navigateRoute(3, 4, 3, 1, "u2", testSteps) == 2);
+assert(navigateRoute(1, 1, 1, 4, "e2", testSteps) == 2);
+assert(navigateRoute(1, 1, 1, 3, "e9", testSteps) == 3);
+assert(navigateRoute(1, 2, 3, 1, "s", testSteps) == 3);
+assert(navigateRoute(3, 4, 3, 1, "w2", testSteps) == 3);
+
+
+assert(navigateRoute(1, 1, 3, 4, "e2se", testSteps) == 1);
+assert(navigateRoute(1, 1, 3, 4, "e2ses", testSteps) == 0);
+assert(navigateRoute(1, 1, 3, 4, "e02s01n0es", testSteps) == 0);
+assert(navigateRoute(1, 1, 3, 4, "e2w2e2s01n0es", testSteps) == 0);
+assert(navigateRoute(3, 1, 3, 4, "n2e2s2e", testSteps) == 0);
+```

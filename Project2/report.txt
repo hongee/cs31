@@ -1,0 +1,27 @@
+CS31
+=====
+### Project 2 Report
+
+##### Obstacles
+1. Translating the logic "check if the letter entered is not y or n"
+   to code led to some moments of confusion due to the incorrect use
+   of the "or" operator instead of "and" since both negative statements
+   must hold true.
+
+2. Doing data validation after all inputs have been taken resulted in
+   much more human readable code.
+
+##### Test Cases
+```
+Negative units: (-500,boomovie,12.2,y)
+Empty string: (500,\n,12.2,y)
+Negative base price: (500,boomovie,-12.2,y)
+Invalid input for premium: (500,boomovie,12.2,asd)
+Premium: (500,boomovie,12.2,y)
+Not Premium: (500,boomovie,12.2,n)
+Zero units: (0,boomovie,12.2,n)
+Zero price: (500,boomovie,0,n)
+Zero units & zero price: (0,boomovie,0,n)
+Very large units: (99999999,boomovie,1.0,n)
+Very large prices: (500,boomovie,99999999,n)
+```

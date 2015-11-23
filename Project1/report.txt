@@ -1,0 +1,68 @@
+CS31
+=====
+### Project 1 Report
+1. For the original code, if a sufficiently large number of Volkswagen
+users was given as the input (e.g. 99999999) and a relatively minuscule
+number was provided for either accepting payment or refunds (e.g. 1), the
+output given by the program will be 100% and 0% instead of the expected 99.99..%.
+
+2. For *logic_error.cpp*, a mistake was introduced where the input for people willing
+to take payment is instead saved to the variable numRefunded, and vice versa,
+hence leading to a logical error in the code. Another error is introduced
+where the calculated percentages were stored in integers instead of doubles, leading
+to truncated percentages which leads to either incorrect or imprecise results.
+
+```
+How many diesel Volkswagen owners were surveyed? 1000
+How many of them say they will take a payment and keep their car? 599
+How many of them say they will return their car for a refund? 401
+
+40% say they will keep their car.
+59% say they will demand a refund.
+More people will demand a refund than keep their car.
+```
+
+3. For *compile_error.cpp*, three compile errors were introduced:
+  1. The variable numKeep was defined multiple times -
+
+  ```cpp
+  int numberSurveyed, numKeep; //**
+  int numKeep;
+  int numRefund;
+  //numKeep is accidentally redefined
+  /*
+  compile_error.cpp: In function 'int main()':
+  compile_error.cpp:10:9: error: redeclaration of 'int numKeep'
+  compile_error.cpp:9:25: note: 'int numKeep' previously declared here
+  */
+  ```
+
+  2. An unnecessary semicolon was added to the conditional expression, prematurely
+  terminating the if loop, resulting in the compiler compiling about stray, unexpected
+  characters.
+
+  ```cpp
+  if (numKeep > numRefund;) //**
+      cout << "More people will keep their car than demand a refund." << endl;
+  else
+      cout << "More people will demand a refund than keep their car." << endl;
+  //an unnecessary semicolon is added to the conditional expression
+  /* Leads to
+  compile_error.cpp: In function 'int main()':
+  compile_error.cpp:30:29: error: expected ')' before ';' token
+  compile_error.cpp:30:30: error: expected primary-expression before ')' token
+  compile_error.cpp:32:6: error: 'else' without a previous 'if'
+  */
+  ```
+
+  3. The direction of the cout operator was reversed, which resulted in an operator
+  being used between invalid types, hence resulting in the errors thrown by the C++
+  STL.
+
+  ```cpp
+  cout >> "How many diesel Volkswagen owners were surveyed? ";//**
+  //the cout operator's direction is reversed
+  /*
+  the standard library throws a whole bunch of errors
+  */
+  ```

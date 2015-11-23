@@ -1,0 +1,62 @@
+CS31
+=====
+### Project 5 Report
+
+##### Obstacles
+1. Misreading the spec - having manageOneRound to handle only one iteration of the probeword.
+
+2. Duplicates rocks and pebbles - naive checking without marking out ones that are checked.
+
+3. Marking out rocks, but rechecking the input string again and marking out extra pebbls.
+
+##### Design
+```
+  main
+    load array of words using loadWords and store into array wordList
+    ensure at least there's at least 1 word in wordlist, otherwise exit
+
+    user inputs numberOfRounds
+    ensure rounds is a positive integer, otherwise exit
+
+    repeat numberOfRounds times
+      select a random index of the wordList
+      print round number and length of the selected word
+      run manageOneRound and store the attempts needed
+      if attempts is greater than max, store in max
+      if attempts is smaller than min, store in min
+      add attempts to total number of attempts
+      print number of attempts and statistics
+
+  manageOneRound
+    if number of words in the array or the chosen word index is not a positive integer, exit
+    if the chosen word index is out of bounds, exit
+    forever
+      read probe word
+      if probe word is a match
+        increment attempts
+        return number of attempts
+      if length of probe word not between 4-6, next iteration
+      if probe word contains characters not lower case alphabets, next iteration
+      if probe word is not found in the list of words, next iteration
+
+      store answer in a temporary string
+
+      iterate through probe word
+        if probe word character = answer word character at the same position
+          replace probe word character with an invalid character i.e. ' '
+          replace answer word character with an invalid, but different, character i.e. '0'
+          increment rocks
+
+      iterate through probe word again
+        iterate through all of answer word
+          if probe word character = answer word character
+            replace answer word character with an invalid character i.e. '0'
+            increment pebbles
+            break and move on to next character
+
+      output rocks and pebbles
+      increment attempts
+
+  strExists
+    iterates through given array of strings to find a match for another string
+```
